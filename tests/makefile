@@ -1,9 +1,9 @@
-TESTFILE = LogTest.cpp
+TESTFILE = ProductTest.cpp
 
 CXX = g++
 CXXFLAGS = -Wall -std=c++11
 DIR = ../firmware/
-SRCS = $(TESTFILE) $(DIR)Queue.cpp $(DIR)Node.cpp $(DIR)Log.cpp
+SRCS = $(TESTFILE) $(DIR)Queue.cpp $(DIR)Node.cpp $(DIR)Log.cpp $(DIR)Product.cpp
 OBJS = ${SRCS:.cpp=.o}
 
 all: linux
@@ -20,6 +20,9 @@ Node: $@.cpp $@.hpp
 
 Log: $@.cpp $@.hpp
 	$(CXX) $(CXXFLAGS) $@.cpp -c
+
+Product: $@.cpp $@.hpp
+	$(CXX) $(CXXFLAGS) $@.cpp -c	
 
 main: $@.cpp $@.hpp $(OBJS)
 	$(CXX) $(CXXFLAGS) $@.cpp -c
