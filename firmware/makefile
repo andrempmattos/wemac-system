@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++11
-SRCS = Queue.cpp Node.cpp main.cpp
+SRCS = main.cpp Queue.cpp Node.cpp Log.cpp
 OBJS = ${SRCS:.cpp=.o}
 
 all: linux
@@ -13,6 +13,9 @@ Queue: $@.cpp $@.hpp
 	$(CXX) $(CXXFLAGS) $@.cpp -c
 
 Node: $@.cpp $@.hpp
+	$(CXX) $(CXXFLAGS) $@.cpp -c
+
+Log: $@.cpp $@.hpp
 	$(CXX) $(CXXFLAGS) $@.cpp -c
 
 main: $@.cpp $@.hpp $(OBJS)
