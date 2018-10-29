@@ -1,4 +1,4 @@
-#include "../firmware/Product.hpp"
+#include "../src/Product.hpp"
 
 #include <iostream>
 

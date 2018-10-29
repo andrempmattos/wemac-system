@@ -1,4 +1,4 @@
-#include "../firmware/Log.hpp"
+#include "../src/Log.hpp"
 #include <iostream>
 
 int main() {
