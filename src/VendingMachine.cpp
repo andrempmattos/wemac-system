@@ -8,6 +8,15 @@ VendingMachine::VendingMachine() : StateMachine(ST_MAX_STATES) {
     logVendingMachine.setLevel(Log::levelInfo);
     logVendingMachine.setScope("[VMCORE]");
     logVendingMachine.warn("(CONSTRUCTOR)VendingMachine");
+
+    productDatabase = new Product[Product::MAX_VM_SLOTS];
+
+    std::vector<productInfo> pData(Product::MAX_VM_SLOTS);
+    productDatabase->getProductDatabase(pData);
+    
+    productDatabase->setProductDatabase(productDatabase, pData);
+
+    logVendingMachine.debug("Product database ready");    
 } 
 
 
@@ -21,11 +30,14 @@ void VendingMachine::cancelEvent(void) {
         TRANSITION_MAP_ENTRY (ST_DEVOLUTION)  // ST_Validation
         TRANSITION_MAP_ENTRY (ST_DEVOLUTION)  // ST_Transaction
         TRANSITION_MAP_ENTRY (ST_DEVOLUTION)  // ST_Deployment
-    END_TRANSITION_MAP(NULL)
+    END_TRANSITION_MAP(nullptr)
 }
 
 // increment VendingMachine cash external event
-void VendingMachine::cashIncrementEvent(VendingMachineData* pData) {
+void VendingMachine::cashIncrementEvent(float t_inputCash) {
+    VendingMachineData* pData = new VendingMachineData();
+    pData->cashValue = t_inputCash;
+
     BEGIN_TRANSITION_MAP                      // - Current State -
         TRANSITION_MAP_ENTRY (ST_TRANSACTION) // ST_Idle
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Devolution
@@ -36,7 +48,10 @@ void VendingMachine::cashIncrementEvent(VendingMachineData* pData) {
 }
 
 // set VendingMachine speed external event
-void VendingMachine::productSelectionEvent(VendingMachineData* pData) {
+void VendingMachine::productSelectionEvent(int t_productSelection) {
+    VendingMachineData* pData = new VendingMachineData();
+    pData->productSelection = t_productSelection;
+
     BEGIN_TRANSITION_MAP                      // - Current State -
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Idle
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Devolution
@@ -60,23 +75,25 @@ void VendingMachine::ST_Devolution(EventData* pData) {
 }
 
 // start the VendingMachine going
-void VendingMachine::ST_Validation(EventData* pData) {
-	bool isPurchaseValid = false;
-
-    std::cout << "VendingMachine::ST_Validation" << std::endl;
+void VendingMachine::ST_Validation(VendingMachineData* pData) {
+    logVendingMachine.warn("(STATE)Validation");
     
-    // perform the stop VendingMachine processing here
+    bool isPurchaseValid = (m_transactionCash >= productDatabase[pData->productSelection].getValue()) ? true : false;
+
     // transition to ST_Idle via an internal event
-    
-    //For debug purposes only
-    //TODO: Implement the real update
-    std::cin >> isPurchaseValid;
-
     if (isPurchaseValid) {
-        InternalEvent(ST_DEPLOYMENT);
+        VendingMachineData* pDataTemp = new VendingMachineData();
+        pDataTemp->productSelection = pData->productSelection;
+        m_transactionCash -= productDatabase[pData->productSelection].getValue(); 
+
+        logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Valid purchase"));
+
+        InternalEvent(ST_DEPLOYMENT, pDataTemp);
     }
     else {
-        InternalEvent(ST_TRANSACTION);
+        logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Invalid purchase"));
+        VendingMachineData* pDataNull = new VendingMachineData();
+        InternalEvent(ST_TRANSACTION, pDataNull);
     }
 }
 
@@ -90,7 +107,7 @@ void VendingMachine::ST_Transaction(VendingMachineData* pData) {
 // changes the VendingMachine speed once the VendingMachine is moving
 void VendingMachine::ST_Deployment(VendingMachineData* pData) {
     logVendingMachine.warn("(STATE)Deployment");
-    // perform the change VendingMachine speed to pData->speed here
+    logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Deploying"));
     InternalEvent(ST_DEVOLUTION);
     
     /*

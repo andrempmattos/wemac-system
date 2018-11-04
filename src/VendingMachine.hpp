@@ -20,10 +20,11 @@ namespace VMCore {
 
             // external events taken by this state machine
             void cancelEvent();
-        void cashIncrementEvent(VendingMachineData*);
-        void productSelectionEvent(VendingMachineData*);
-    private:
+            void cashIncrementEvent(float t_inputCash);
+            void productSelectionEvent(int t_productSelection);
+        private:
             float m_transactionCash = 0;
+            Product* productDatabase = nullptr;
             Log logVendingMachine;
 
             // state machine state functions
