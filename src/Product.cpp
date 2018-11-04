@@ -3,6 +3,8 @@
 using namespace VMCore;
 
 Product::Product(void) {
+	logProduct.setLevel(Log::levelInfo);
+	logProduct.setScope("[PRODUCT]");
 }
 
 
@@ -51,6 +53,8 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
 
   	ifstream products("src/../include/ProductDatabase.txt");
   	if (products.is_open()) {
+  		logProduct.debug("Product database data");
+		
 		while(getline(products, line)) {
 			for (int i = 0; i < 4; i++) {
 				contentStartPos = line.find(contentSeparator, contentEndPos);
@@ -63,18 +67,21 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
 				pData[j].stock = (i == 2) ? stoi(data[i]) : pData[j].stock;
 				pData[j].id  = (i == 3)   ? stoi(data[i]) : pData[j].id;
 			}
-			//cout << pData[j].name << endl;
-			//cout << pData[j].value << endl;
-			//cout << pData[j].stock << endl;
-			//cout << pData[j].id << endl;
+
+			logProduct.debug(pData[j].name);
+			logProduct.debug(to_string(pData[j].value));
+			logProduct.debug(to_string(pData[j].stock));
+			logProduct.debug(to_string(pData[j].id));
 			j++;
 			contentStartPos = 0;
 			contentEndPos = 0;
 		}
     	products.close();
   	}
-  	//TODO: Use the log system
-  	else cout << "Unable to open file" << endl;
+  	else {
+  		logProduct.error("Unable to open file");
+  	}
+
 }
 
 void Product::setProductDatabase(Product* t_product, std::vector<productInfo> &pData) {
@@ -86,11 +93,6 @@ void Product::setProductDatabase(Product* t_product, std::vector<productInfo> &p
 		t_product[i].setName(pDataTemp.name);
 		t_product[i].setValue(pDataTemp.value);
 		t_product[i].setStock(pDataTemp.stock);
-		t_product[i].setId((ProductID)pDataTemp.id);
-
-		//std::cout << t_product[i].getName() << std::endl;
-		//std::cout << t_product[i].getValue() << std::endl;
-		//std::cout << t_product[i].getStock() << std::endl;
-		//std::cout << t_product[i].getId() << std::endl;		
+		t_product[i].setId((ProductID)pDataTemp.id);		
 	}
 }

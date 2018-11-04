@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "Log.hpp"
 
 namespace VMCore {
 	struct productInfo {
@@ -23,6 +24,8 @@ namespace VMCore {
 			};
 		
 		private:
+			Log logProduct;
+
 			std::string m_name;
 			float m_value;
 			int m_stock;

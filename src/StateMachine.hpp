@@ -13,20 +13,20 @@ namespace VMCore {
      
     // base class for state machines
     class StateMachine {
-    public:
-        StateMachine(unsigned char t_maxStates);
-        virtual ~StateMachine() {}
-    protected:
-        enum { EVENT_IGNORED = 0xFE, CANNOT_HAPPEN };
-        unsigned char currentState;
-        void ExternalEvent(unsigned char newState, EventData* = NULL);
-        void InternalEvent(unsigned char newState, EventData* = NULL);
-        virtual const StateStruct* GetStateMap() = 0;
-    private:
-        const unsigned char m_maxStates;
-        bool m_eventGenerated;
-        EventData* m_pEventData;
-        void StateEngine(void);
+        public:
+            StateMachine(unsigned char t_maxStates);
+            virtual ~StateMachine() {}
+        protected:
+            enum { EVENT_IGNORED = 0xFE, CANNOT_HAPPEN };
+            unsigned char currentState;
+            void ExternalEvent(unsigned char newState, EventData* = nullptr);
+            void InternalEvent(unsigned char newState, EventData* = nullptr);
+            virtual const StateStruct* GetStateMap() = 0;
+        private:
+            const unsigned char m_maxStates;
+            bool m_eventGenerated;
+            EventData* m_pEventData;
+            void StateEngine(void);
     };
 
     typedef void (StateMachine::*StateFunc)(EventData *);

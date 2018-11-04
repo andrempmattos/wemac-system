@@ -3,6 +3,14 @@
 
 using namespace VMCore;
 
+VendingMachine::VendingMachine() : StateMachine(ST_MAX_STATES) {
+
+    logVendingMachine.setLevel(Log::levelInfo);
+    logVendingMachine.setScope("[VMCORE]");
+    logVendingMachine.warn("(CONSTRUCTOR)VendingMachine");
+} 
+
+
 // Cancel VendingMachine external event
 void VendingMachine::cancelEvent(void) {
     // given the cancel event, transition to a new state based upon 
@@ -40,13 +48,14 @@ void VendingMachine::productSelectionEvent(VendingMachineData* pData) {
 
 // state machine sits here when VendingMachine is not running
 void VendingMachine::ST_Idle(EventData* pData) {
-	std::cout << "VendingMachine::ST_Idle" << std::endl;
+    logVendingMachine.warn("(STATE)Idle");
 }
 
 // stop the VendingMachine 
 void VendingMachine::ST_Devolution(EventData* pData) {
-	std::cout << "VendingMachine::ST_Devolution" << std::endl;
-
+	logVendingMachine.warn("(STATE)Devolution");
+    logVendingMachine.info(("(DEVOLUTION)" + std::to_string(m_transactionCash)));
+    
     InternalEvent(ST_IDLE);
 }
 
@@ -73,14 +82,27 @@ void VendingMachine::ST_Validation(EventData* pData) {
 
 // changes the VendingMachine speed once the VendingMachine is moving
 void VendingMachine::ST_Transaction(VendingMachineData* pData) {
-	std::cout << "VendingMachine::ST_Transaction" << std::endl;
-    // perform the change VendingMachine speed to pData->speed here
+	logVendingMachine.warn("(STATE)Transaction");
+    m_transactionCash += (pData->cashValue);
+    logVendingMachine.info(("(TOTAL) $" + std::to_string(m_transactionCash)));
 }
 
 // changes the VendingMachine speed once the VendingMachine is moving
 void VendingMachine::ST_Deployment(VendingMachineData* pData) {
-    std::cout << "VendingMachine::ST_Deployment" << std::endl;
+    logVendingMachine.warn("(STATE)Deployment");
     // perform the change VendingMachine speed to pData->speed here
-
     InternalEvent(ST_DEVOLUTION);
+    
+    /*
+    userAnswer = "n";
+    std::cout << "Confirm?[y/n]" << std::endl;
+    std::cin >> userAnswer; 
+    bool isConfirmed = (userAnswer == "y") ? true : false;
+    if (isConfirmed) {
+        std::cout << "[DEPLOY]" << pData->productSelection << std::endl;
+    }
+    else {
+        std::cout << "[CANCELED]" << pData->productSelection << std::endl;    
+    }
+    */
 }

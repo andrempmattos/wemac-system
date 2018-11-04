@@ -7,7 +7,7 @@ StateMachine::StateMachine(unsigned char t_maxStates) :
     m_maxStates(t_maxStates),
     currentState(0),
     m_eventGenerated(false),
-    m_pEventData(NULL) 
+    m_pEventData(nullptr) 
 {
 }    
  
@@ -30,7 +30,7 @@ void StateMachine::ExternalEvent(unsigned char newState, EventData* pData) {
 // generates an internal event. called from within a state 
 // function to transition to a new state
 void StateMachine::InternalEvent(unsigned char newState, EventData* pData) {
-	if (pData == NULL)
+	if (pData == nullptr)
 		pData = new EventData();
 
     m_pEventData = pData;
@@ -40,12 +40,12 @@ void StateMachine::InternalEvent(unsigned char newState, EventData* pData) {
 
 // the state engine executes the state machine states
 void StateMachine::StateEngine(void) {
-    EventData* pDataTemp = NULL;
+    EventData* pDataTemp = nullptr;
  
     // while events are being generated keep executing states
     while (m_eventGenerated) {         
         pDataTemp = m_pEventData;  // copy of event data pointer
-        m_pEventData = NULL;       // event data used up, reset ptr
+        m_pEventData = nullptr;    // event data used up, reset ptr
         m_eventGenerated = false;  // event used up, reset flag
  
         //TODO: Use exception instead of assert
@@ -56,11 +56,11 @@ void StateMachine::StateEngine(void) {
 
         // execute the state passing in event data, if any
         (this->*pStateMap[currentState].pStateFunc)(pDataTemp);
- 
+
         // if event data was used, then delete it
         if (pDataTemp) {
             delete pDataTemp;
-            pDataTemp = NULL;
+            pDataTemp = nullptr;
         }
     }
 }
