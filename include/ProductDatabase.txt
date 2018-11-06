@@ -1,0 +1,9 @@
+;Coke;2.5;10;0;
+;Meet;2;8;1;
+;Etirps;1.75;4;2;
+;Grape;2;6;3;
+;Orange;2;0;4;
+;Apple;1.75;4;5;
+;Mate;1.5;1;6;
+;Cinnamon;2;0;7;
+;Water;1.5;10;8;
