@@ -2,6 +2,7 @@
 #define VMCORE_VENDING_MACHINE_HPP
 
 #include "StateMachine.hpp"
+#include "Interface.hpp"
 #include "Product.hpp"
 #include "Log.hpp"
 #include <iostream>
@@ -16,7 +17,7 @@ namespace VMCore {
     // the VendingMachine state machine class
     class VendingMachine: public StateMachine {
         public:
-            VendingMachine();
+            VendingMachine(Interface* t_interfaceOverride);
 
             // external events taken by this state machine
             void cancelEvent();
@@ -24,8 +25,10 @@ namespace VMCore {
             void productSelectionEvent(int t_productSelection);
         private:
             float m_transactionCash = 0;
+            Interface* m_interface = nullptr;
             Product* productDatabase = nullptr;
             Log logVendingMachine;
+
 
             // state machine state functions
             void ST_Idle(EventData*);

@@ -1,26 +1,44 @@
 #include "VendingMachine.hpp"
+#include "Interface.hpp"
+#include "DebugInterface.hpp"
 #include <iostream>
 #include <vector>
+#include <string>
 
 int main() {
 
+	// Debug main version (first project checkpoint/assigment)
 	using namespace VMCore;
 
-	VendingMachine VM;
+	Interface* interfaceOverride = new DebugInterface();
+	VendingMachine VM(interfaceOverride);
 
-	float inputCash = 0;
-	int prodSel = 0;
+	// This code section will be integrated to the interface class in a different implementation 
+	UserData* user = new UserData();
+	user->userOutput = ("Keyboard map\n1:COKE | 2:MEET | 3:ETIRPS | 4:GRAPE | 5:ORANGE | 6:APPLE\n7:MATE | 8:CINNAMON" \
+						"| 9:WATER | /:$0.25 | *:$0.50 | -:$1\n0:No | ,:Yes | +:Cancel | ;:Menu");
+	interfaceOverride->setUserOutput(user);
 
-	std::cout << "Cash value" << std::endl;
-	std::cin >> inputCash;
+	while(true) {
+		interfaceOverride->getUserInput(user);
+		
+			 if (user->userInput == "0.25") VM.cashIncrementEvent(0.25);
+		else if (user->userInput == "0.50") VM.cashIncrementEvent(0.5);
+		else if (user->userInput == "1.00") VM.cashIncrementEvent(1);
+		else if (user->userInput == "0") VM.productSelectionEvent(Product::SODA_SLOT_A);
+		else if (user->userInput == "1") VM.productSelectionEvent(Product::SODA_SLOT_B);
+		else if (user->userInput == "2") VM.productSelectionEvent(Product::SODA_SLOT_C);
+		else if (user->userInput == "3") VM.productSelectionEvent(Product::JUICE_SLOT_A);
+		else if (user->userInput == "4") VM.productSelectionEvent(Product::JUICE_SLOT_B);
+		else if (user->userInput == "5") VM.productSelectionEvent(Product::JUICE_SLOT_C);
+		else if (user->userInput == "6") VM.productSelectionEvent(Product::TEA_SLOT_A);
+		else if (user->userInput == "7") VM.productSelectionEvent(Product::TEA_SLOT_B);
+		else if (user->userInput == "8") VM.productSelectionEvent(Product::WATER_SLOT);
+		else if (user->userInput == "cancel") VM.cancelEvent();
+		else if (user->userInput == "menu") interfaceOverride->setUserOutput(user);
+		else ;
+	}
 
-	std::cout << "Product selection" << std::endl;
-	std::cin >> prodSel;
-
-	VM.cashIncrementEvent(inputCash);
-
-	VM.productSelectionEvent(prodSel);
-
-	VM.cancelEvent();
+	delete user;
 }
 

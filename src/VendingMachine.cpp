@@ -3,11 +3,13 @@
 
 using namespace VMCore;
 
-VendingMachine::VendingMachine() : StateMachine(ST_MAX_STATES) {
+VendingMachine::VendingMachine(Interface* t_interfaceOverride) : StateMachine(ST_MAX_STATES) {
 
-    logVendingMachine.setLevel(Log::levelInfo);
+    logVendingMachine.setLevel(Log::levelError);
     logVendingMachine.setScope("[VMCORE]");
     logVendingMachine.warn("(CONSTRUCTOR)VendingMachine");
+
+    m_interface = t_interfaceOverride;
 
     productDatabase = new Product[Product::MAX_VM_SLOTS];
 
@@ -64,12 +66,22 @@ void VendingMachine::productSelectionEvent(int t_productSelection) {
 // state machine sits here when VendingMachine is not running
 void VendingMachine::ST_Idle(EventData* pData) {
     logVendingMachine.warn("(STATE)Idle");
+
+    AdvertisingData advertising;
+    advertising.advertisingOutput = "Propaganda $$$";
+    m_interface->printAdvertising(&advertising);
 }
 
 // stop the VendingMachine 
 void VendingMachine::ST_Devolution(EventData* pData) {
 	logVendingMachine.warn("(STATE)Devolution");
     logVendingMachine.info(("(DEVOLUTION)" + std::to_string(m_transactionCash)));
+
+    UserData user;
+    user.userOutput = "Devolution: $" + std::to_string(m_transactionCash);
+    m_interface->setUserOutput(&user);
+    
+    m_transactionCash = 0;
     
     InternalEvent(ST_IDLE);
 }
@@ -78,10 +90,17 @@ void VendingMachine::ST_Devolution(EventData* pData) {
 void VendingMachine::ST_Validation(VendingMachineData* pData) {
     logVendingMachine.warn("(STATE)Validation");
     
-    bool isPurchaseValid = (m_transactionCash >= productDatabase[pData->productSelection].getValue()) ? true : false;
+        
+    UserData user;
+    user.userOutput = "Do you confirm the purchase? Item: " + productDatabase[pData->productSelection].getName()
+                        + " $" + std::to_string(productDatabase[pData->productSelection].getValue());
+    m_interface->setUserOutput(&user);
+    m_interface->getUserInput(&user);    
 
-    // transition to ST_Idle via an internal event
-    if (isPurchaseValid) {
+    bool isPurchaseValid = (m_transactionCash >= productDatabase[pData->productSelection].getValue()) ? true : false;
+    bool isConfirmed = (user.userInput == "y") ? true : false;
+
+    if (isPurchaseValid && isConfirmed) {
         VendingMachineData* pDataTemp = new VendingMachineData();
         pDataTemp->productSelection = pData->productSelection;
         m_transactionCash -= productDatabase[pData->productSelection].getValue(); 
@@ -91,6 +110,9 @@ void VendingMachine::ST_Validation(VendingMachineData* pData) {
         InternalEvent(ST_DEPLOYMENT, pDataTemp);
     }
     else {
+        user.userOutput = "Cancelled purchase!";
+        m_interface->setUserOutput(&user);
+
         logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Invalid purchase"));
         VendingMachineData* pDataNull = new VendingMachineData();
         InternalEvent(ST_TRANSACTION, pDataNull);
@@ -102,24 +124,25 @@ void VendingMachine::ST_Transaction(VendingMachineData* pData) {
 	logVendingMachine.warn("(STATE)Transaction");
     m_transactionCash += (pData->cashValue);
     logVendingMachine.info(("(TOTAL) $" + std::to_string(m_transactionCash)));
+
+    UserData user;
+    user.userOutput = "Current cash: $" + std::to_string(m_transactionCash);
+    m_interface->setUserOutput(&user);    
 }
 
 // changes the VendingMachine speed once the VendingMachine is moving
 void VendingMachine::ST_Deployment(VendingMachineData* pData) {
     logVendingMachine.warn("(STATE)Deployment");
     logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Deploying"));
-    InternalEvent(ST_DEVOLUTION);
     
-    /*
-    userAnswer = "n";
-    std::cout << "Confirm?[y/n]" << std::endl;
-    std::cin >> userAnswer; 
-    bool isConfirmed = (userAnswer == "y") ? true : false;
-    if (isConfirmed) {
-        std::cout << "[DEPLOY]" << pData->productSelection << std::endl;
-    }
-    else {
-        std::cout << "[CANCELED]" << pData->productSelection << std::endl;    
-    }
-    */
+    UserData user;
+    user.userOutput = "Deploying: " + productDatabase[pData->productSelection].getName()
+                        + " $" + std::to_string(productDatabase[pData->productSelection].getValue());
+    m_interface->setUserOutput(&user);
+
+    SystemData system;
+    system.systemOutput = "(Event)Product deployment";
+    m_interface->setSystemOutput(&system);
+
+    InternalEvent(ST_DEVOLUTION);
 }
