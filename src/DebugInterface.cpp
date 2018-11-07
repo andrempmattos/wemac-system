@@ -1,3 +1,15 @@
+/**
+ * \file Computer-oriented interface class 
+ * \brief It implements a console/keyboard interface system
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 11/06/2017
+ * 
+ * \defgroup Computer Debug Interface
+ */
+
 #include "DebugInterface.hpp"
 
 using namespace VMCore;

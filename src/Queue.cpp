@@ -1,3 +1,15 @@
+/**
+ * \file Advertising queue class 
+ * \brief It implements a string based queue
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 10/27/2017
+ * 
+ * \defgroup VendingMachineCore
+ */
+
 #include "Queue.hpp"
 
 //using namespace std;

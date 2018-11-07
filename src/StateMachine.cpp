@@ -1,3 +1,15 @@
+/**
+ * \file Generic state machine class 
+ * \brief It implements a moore vending machine
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 11/02/2017
+ * 
+ * \defgroup VendingMachineCore
+ */
+
 #include "StateMachine.hpp"
 //#include <assert.h>
 

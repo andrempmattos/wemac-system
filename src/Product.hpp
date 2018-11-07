@@ -47,6 +47,7 @@ namespace VMCore {
 			void setStock(int t_stock);
 			void getProductDatabase(std::vector<productInfo> &pData);
 			void setProductDatabase(Product* t_product, std::vector<productInfo> &pData);
+			//TODO: Add as protected instead of public
 	};	
 }
 

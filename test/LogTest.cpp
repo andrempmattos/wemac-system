@@ -1,3 +1,5 @@
+//TODO: Update and add test header comment!
+
 #include "../src/Log.hpp"
 #include <iostream>
 

@@ -1,3 +1,15 @@
+/**
+ * \file Main file 
+ * \brief It instantiates the vending machine system and the platform-oriented interfaces 
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 10/28/2017
+ * 
+ * \defgroup VendingMachineCore
+ */
+
 #include "VendingMachine.hpp"
 #include "Interface.hpp"
 #include "DebugInterface.hpp"
