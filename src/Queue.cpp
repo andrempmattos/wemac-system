@@ -12,7 +12,6 @@
 
 #include "Queue.hpp"
 
-//using namespace std;
 using namespace VMCore;
 
 Queue::~Queue() {
@@ -22,7 +21,7 @@ Queue::~Queue() {
         delete m_head;
         m_head = m_cursor;
     }
-    m_head = nullptr; // Officially empty
+    m_head = nullptr; //Officially empty
 }
 
 void Queue::push(int t_data) {
@@ -43,8 +42,6 @@ void Queue::push(int t_data) {
 int Queue::pop() {
     int data = 0;
     if (m_head != nullptr) {
-        //cout << "Removendo: " << m_head << endl;
-        //cout << "e fica:" << m_head->getVal() << endl;
         data = m_head->getNodeData();
         Node* m_oldHead = m_head;
         m_head = m_head->getNextNode();

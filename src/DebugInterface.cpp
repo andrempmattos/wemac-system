@@ -21,11 +21,12 @@ DebugInterface::~DebugInterface() {
 }
 
 void DebugInterface::getSystemInput(SystemData* pData) {
-	//TODO
+	//TODO:Get a simulated sensor/pin data
 }
 
 void DebugInterface::setSystemOutput(SystemData* pData) {
 	std::cout << "[VIRTUAL](INTERFACE)" << pData->systemOutput << std::endl;
+	//TODO:Set a actuator/pin value
 }
 
 void DebugInterface::getUserInput(UserData* pData) {
@@ -59,5 +60,5 @@ void DebugInterface::printAdvertising(AdvertisingData* pData) {
 }
 
 void DebugInterface::insertAdvertising(AdvertisingData* pData) {
-	//TODO
+	//TODO:Add a super user mode to manage advertising queue
 }

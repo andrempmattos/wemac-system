@@ -1,5 +1,5 @@
 /**
- * \file Generic state machine class 
+ * \file State machine base class 
  * \brief It implements a moore vending machine
  * 
  * \author André Mattos <andrempmattos@gmail.com>
@@ -23,24 +23,24 @@ StateMachine::StateMachine(unsigned char t_maxStates) :
 {
 }    
  
-// generates an external event. called once per external event 
-// to start the state machine executing
+//Generates an external event. Called once per external event 
+//to start the state machine executing
 void StateMachine::ExternalEvent(unsigned char newState, EventData* pData) {
-    // if we are supposed to ignore this event
+    //If we are supposed to ignore this event
     if (newState == EVENT_IGNORED) {
-        // just delete the event data, if any
+        //Just delete the event data, if any
         if (pData)  
             delete pData;
     }
     else {
-        // generate the event and execute the state engine
+        //Generate the event and execute the state engine
         InternalEvent(newState, pData); 
         StateEngine();     
     }
 }
 
-// generates an internal event. called from within a state 
-// function to transition to a new state
+//Generates an internal event. Called from within a state 
+//function to transition to a new state
 void StateMachine::InternalEvent(unsigned char newState, EventData* pData) {
 	if (pData == nullptr)
 		pData = new EventData();
@@ -50,26 +50,26 @@ void StateMachine::InternalEvent(unsigned char newState, EventData* pData) {
     currentState = newState;
 }
 
-// the state engine executes the state machine states
+//The state engine executes the state machine states
 void StateMachine::StateEngine(void) {
     EventData* pDataTemp = nullptr;
  
-    // while events are being generated keep executing states
+    //While events are being generated keep executing states
     while (m_eventGenerated) {         
-        pDataTemp = m_pEventData;  // copy of event data pointer
-        m_pEventData = nullptr;    // event data used up, reset ptr
-        m_eventGenerated = false;  // event used up, reset flag
+        pDataTemp = m_pEventData;  //Copy of event data pointer
+        m_pEventData = nullptr;    //Event data used up, reset ptr
+        m_eventGenerated = false;  //Event used up, reset flag
  
         //TODO: Use exception instead of assert
         //assert(currentState < m_maxStates);
 
-		// get state map
+		//Get state map
         const StateStruct* pStateMap = GetStateMap();
 
-        // execute the state passing in event data, if any
+        //Execute the state passing in event data, if any
         (this->*pStateMap[currentState].pStateFunc)(pDataTemp);
 
-        // if event data was used, then delete it
+        //If event data was used, then delete it
         if (pDataTemp) {
             delete pDataTemp;
             pDataTemp = nullptr;
