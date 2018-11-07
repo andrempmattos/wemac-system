@@ -1,11 +1,8 @@
 #ifndef VMCORE_PRODUCT_HPP
 #define VMCORE_PRODUCT_HPP
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
 #include "Log.hpp"
+#include "../include/ProjectIncludes.hpp"
 
 namespace VMCore {
 	struct productInfo {

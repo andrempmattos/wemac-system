@@ -1,8 +1,6 @@
 #ifndef VMCORE_STATE_MACHINE_HPP
 #define VMCORE_STATE_MACHINE_HPP
 
-#include <iostream>
-
 namespace VMCore { 
     class EventData {
     public:

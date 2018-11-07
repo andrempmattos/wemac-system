@@ -1,8 +1,7 @@
 #ifndef VMCORE_INTERFACE_HPP
 #define VMCORE_INTERFACE_HPP
 
-#include <string>
-#include <iostream>
+#include "../include/ProjectIncludes.hpp"
 
 namespace VMCore {
     struct SystemData {

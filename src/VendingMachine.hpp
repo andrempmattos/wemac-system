@@ -1,11 +1,11 @@
 #ifndef VMCORE_VENDING_MACHINE_HPP
 #define VMCORE_VENDING_MACHINE_HPP
 
+#include "../include/ProjectIncludes.hpp"
 #include "StateMachine.hpp"
 #include "Interface.hpp"
 #include "Product.hpp"
 #include "Log.hpp"
-#include <iostream>
 
 namespace VMCore { 
     // structure to hold event data passed into state machine
