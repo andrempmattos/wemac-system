@@ -49,5 +49,5 @@ int main() {
 	}
 
 	delete user;
-	delete interfaceOverride
+	delete interfaceOverride;
 }
