@@ -1,3 +1,15 @@
+/**
+ * \file Computer-oriented interface class 
+ * \brief It implements a console/keyboard interface system
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 11/06/2017
+ * 
+ * \defgroup Computer Debug Interface
+ */
+
 #include "DebugInterface.hpp"
 
 using namespace VMCore;
@@ -9,11 +21,12 @@ DebugInterface::~DebugInterface() {
 }
 
 void DebugInterface::getSystemInput(SystemData* pData) {
-	//TODO
+	//TODO:Get a simulated sensor/pin data
 }
 
 void DebugInterface::setSystemOutput(SystemData* pData) {
 	std::cout << "[VIRTUAL](INTERFACE)" << pData->systemOutput << std::endl;
+	//TODO:Set a actuator/pin value
 }
 
 void DebugInterface::getUserInput(UserData* pData) {
@@ -47,5 +60,5 @@ void DebugInterface::printAdvertising(AdvertisingData* pData) {
 }
 
 void DebugInterface::insertAdvertising(AdvertisingData* pData) {
-	//TODO
+	//TODO:Add a super user mode to manage advertising queue
 }

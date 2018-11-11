@@ -1,25 +1,25 @@
 #ifndef VMCORE_VENDING_MACHINE_HPP
 #define VMCORE_VENDING_MACHINE_HPP
 
+#include "../include/ProjectIncludes.hpp"
 #include "StateMachine.hpp"
 #include "Interface.hpp"
 #include "Product.hpp"
 #include "Log.hpp"
-#include <iostream>
 
 namespace VMCore { 
-    // structure to hold event data passed into state machine
+    //Structure to hold event data passed into state machine
     struct VendingMachineData: public EventData {
         float cashValue;
         int productSelection;
     };
 
-    // the VendingMachine state machine class
+    //The VendingMachine state machine class
     class VendingMachine: public StateMachine {
         public:
             VendingMachine(Interface* t_interfaceOverride);
 
-            // external events taken by this state machine
+            //External events taken by this state machine
             void cancelEvent();
             void cashIncrementEvent(float t_inputCash);
             void productSelectionEvent(int t_productSelection);
@@ -30,14 +30,14 @@ namespace VMCore {
             Log logVendingMachine;
 
 
-            // state machine state functions
+            //State machine state functions
             void ST_Idle(EventData*);
             void ST_Devolution(EventData*);
             void ST_Validation(VendingMachineData*);
             void ST_Transaction(VendingMachineData*);
             void ST_Deployment(VendingMachineData*);
 
-            // state map to define state function order
+            //State map to define state function order
             BEGIN_STATE_MAP
         		STATE_MAP_ENTRY(&VendingMachine::ST_Idle)
                 STATE_MAP_ENTRY(&VendingMachine::ST_Devolution)
@@ -46,8 +46,8 @@ namespace VMCore {
                 STATE_MAP_ENTRY(&VendingMachine::ST_Deployment)
             END_STATE_MAP
 
-            // state enumeration order must match the order of state
-            // method entries in the state map
+            //State enumeration order must match the order of state
+            //Method entries in the state map
             enum E_States { 
                 ST_IDLE = 0,
                 ST_DEVOLUTION,

@@ -1,8 +1,6 @@
 #ifndef VMCORE_STATE_MACHINE_HPP
 #define VMCORE_STATE_MACHINE_HPP
 
-#include <iostream>
-
 namespace VMCore { 
     class EventData {
     public:
@@ -11,7 +9,7 @@ namespace VMCore {
 
     struct StateStruct;
      
-    // base class for state machines
+    //Base class for state machines
     class StateMachine {
         public:
             StateMachine(unsigned char t_maxStates);

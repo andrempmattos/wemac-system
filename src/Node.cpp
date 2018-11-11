@@ -1,3 +1,15 @@
+/**
+ * \file Node base class 
+ * \brief It implements a commum base for data structures 
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 10/28/2017
+ * 
+ * \defgroup VendingMachineCore
+ */
+
 #include "Node.hpp"
 
 using namespace VMCore;

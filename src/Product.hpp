@@ -1,11 +1,8 @@
 #ifndef VMCORE_PRODUCT_HPP
 #define VMCORE_PRODUCT_HPP
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
 #include "Log.hpp"
+#include "../include/ProjectIncludes.hpp"
 
 namespace VMCore {
 	struct productInfo {
@@ -47,6 +44,7 @@ namespace VMCore {
 			void setStock(int t_stock);
 			void getProductDatabase(std::vector<productInfo> &pData);
 			void setProductDatabase(Product* t_product, std::vector<productInfo> &pData);
+			//TODO: Add as protected instead of public
 	};	
 }
 

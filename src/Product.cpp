@@ -1,3 +1,15 @@
+/**
+ * \file Product base class 
+ * \brief It implements a commum base for the vending machine products 
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 10/28/2017
+ * 
+ * \defgroup VendingMachineCore
+ */
+
 #include "Product.hpp"
 
 using namespace VMCore;

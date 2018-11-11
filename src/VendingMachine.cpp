@@ -1,3 +1,15 @@
+/**
+ * \file Main vending machine class 
+ * \brief It holds all the core system
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 10/27/2017
+ * 
+ * \defgroup VendingMachineCore
+ */
+
 #include "VendingMachine.hpp"
 #include <iostream>
 
@@ -5,12 +17,15 @@ using namespace VMCore;
 
 VendingMachine::VendingMachine(Interface* t_interfaceOverride) : StateMachine(ST_MAX_STATES) {
 
+    //Log system setup
     logVendingMachine.setLevel(Log::levelError);
     logVendingMachine.setScope("[VMCORE]");
     logVendingMachine.warn("(CONSTRUCTOR)VendingMachine");
 
+    //Change the interface used
     m_interface = t_interfaceOverride;
 
+    //Add the product database into the system
     productDatabase = new Product[Product::MAX_VM_SLOTS];
 
     std::vector<productInfo> pData(Product::MAX_VM_SLOTS);
@@ -22,10 +37,10 @@ VendingMachine::VendingMachine(Interface* t_interfaceOverride) : StateMachine(ST
 } 
 
 
-// Cancel VendingMachine external event
+//Cancel VendingMachine external event
 void VendingMachine::cancelEvent(void) {
-    // given the cancel event, transition to a new state based upon 
-    // the current state of the state machine
+    //Given the cancel event, transition to a new state based upon 
+    //the current state of the state machine
     BEGIN_TRANSITION_MAP                      // - Current State -
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Idle
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Devolution
@@ -35,7 +50,7 @@ void VendingMachine::cancelEvent(void) {
     END_TRANSITION_MAP(nullptr)
 }
 
-// increment VendingMachine cash external event
+//Increment VendingMachine cash external event
 void VendingMachine::cashIncrementEvent(float t_inputCash) {
     VendingMachineData* pData = new VendingMachineData();
     pData->cashValue = t_inputCash;
@@ -49,7 +64,7 @@ void VendingMachine::cashIncrementEvent(float t_inputCash) {
     END_TRANSITION_MAP(pData)
 }
 
-// set VendingMachine speed external event
+//Select VendingMachine product external event
 void VendingMachine::productSelectionEvent(int t_productSelection) {
     VendingMachineData* pData = new VendingMachineData();
     pData->productSelection = t_productSelection;
@@ -63,7 +78,7 @@ void VendingMachine::productSelectionEvent(int t_productSelection) {
     END_TRANSITION_MAP(pData)
 }
 
-// state machine sits here when VendingMachine is not running
+//State machine sits here when there is any user interaction
 void VendingMachine::ST_Idle(EventData* pData) {
     logVendingMachine.warn("(STATE)Idle");
 
@@ -72,7 +87,7 @@ void VendingMachine::ST_Idle(EventData* pData) {
     m_interface->printAdvertising(&advertising);
 }
 
-// stop the VendingMachine 
+//Give back the current user cash 
 void VendingMachine::ST_Devolution(EventData* pData) {
 	logVendingMachine.warn("(STATE)Devolution");
     logVendingMachine.info(("(DEVOLUTION)" + std::to_string(m_transactionCash)));
@@ -86,7 +101,7 @@ void VendingMachine::ST_Devolution(EventData* pData) {
     InternalEvent(ST_IDLE);
 }
 
-// start the VendingMachine going
+//Check if the transaction is valid due to the user product selection 
 void VendingMachine::ST_Validation(VendingMachineData* pData) {
     logVendingMachine.warn("(STATE)Validation");
     
@@ -119,7 +134,7 @@ void VendingMachine::ST_Validation(VendingMachineData* pData) {
     }
 }
 
-// changes the VendingMachine speed once the VendingMachine is moving
+//Increase the user cash due to input coins
 void VendingMachine::ST_Transaction(VendingMachineData* pData) {
 	logVendingMachine.warn("(STATE)Transaction");
     m_transactionCash += (pData->cashValue);
@@ -130,7 +145,7 @@ void VendingMachine::ST_Transaction(VendingMachineData* pData) {
     m_interface->setUserOutput(&user);    
 }
 
-// changes the VendingMachine speed once the VendingMachine is moving
+//Deploy the selected product to the user
 void VendingMachine::ST_Deployment(VendingMachineData* pData) {
     logVendingMachine.warn("(STATE)Deployment");
     logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Deploying"));

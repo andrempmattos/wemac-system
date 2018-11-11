@@ -1,8 +1,8 @@
 #ifndef VMCORE_QUEUE_HPP
 #define VMCORE_QUEUE_HPP
 
-//#include <iostream>
 #include "Node.hpp"
+#include "../include/ProjectIncludes.hpp"
 
 namespace VMCore {
     class Queue {

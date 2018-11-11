@@ -1,3 +1,15 @@
+/**
+ * \file Log system class 
+ * \brief It implements an effective log for debug sections
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 10/28/2017
+ * 
+ * \defgroup VendingMachineCore
+ */
+
 #include "Log.hpp"
 
 using namespace VMCore;
