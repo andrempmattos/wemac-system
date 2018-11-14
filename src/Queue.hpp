@@ -13,6 +13,7 @@ namespace VMCore {
             ~Queue();
             int pop();
             void push(int t_data);
+            int cPop();			
     };
 }
 

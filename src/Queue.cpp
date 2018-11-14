@@ -49,3 +49,15 @@ int Queue::pop() {
     }
     return data;
 }
+
+int Queue::cPop() {
+    int data = 0;
+    if(m_head != nullptr) {
+        data = m_head->getNodeData();
+        Node* m_oldHead = m_head;
+        m_head = m_head->getNextNode();
+        this->push(data);
+        delete m_oldHead;
+    }
+    return data;
+}
