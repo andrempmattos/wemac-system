@@ -36,6 +36,20 @@ VendingMachine::VendingMachine(Interface* t_interfaceOverride) : StateMachine(ST
     logVendingMachine.debug("Product database ready");    
 } 
 
+//Timer VendingMachine external event
+void VendingMachine::timerEvent(void) {
+    //Given the timer event, transition to a new state based upon 
+    //the current state of the state machine
+    BEGIN_TRANSITION_MAP                      // - Current State -
+        TRANSITION_MAP_ENTRY (ST_ADVERTISING)  // ST_Idle
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Devolution
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Validation
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Transaction
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Deployment
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Advertising
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Confirmation
+    END_TRANSITION_MAP(nullptr)
+}
 
 //Cancel VendingMachine external event
 void VendingMachine::cancelEvent(void) {
@@ -47,6 +61,8 @@ void VendingMachine::cancelEvent(void) {
         TRANSITION_MAP_ENTRY (ST_DEVOLUTION)  // ST_Validation
         TRANSITION_MAP_ENTRY (ST_DEVOLUTION)  // ST_Transaction
         TRANSITION_MAP_ENTRY (ST_DEVOLUTION)  // ST_Deployment
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Advertising
+        TRANSITION_MAP_ENTRY (ST_DEVOLUTION)  // ST_Confirmation
     END_TRANSITION_MAP(nullptr)
 }
 
@@ -61,6 +77,8 @@ void VendingMachine::cashIncrementEvent(float t_inputCash) {
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Validation
         TRANSITION_MAP_ENTRY (ST_TRANSACTION) // ST_Transaction
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Deployment
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Advertising
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Confirmation
     END_TRANSITION_MAP(pData)
 }
 
@@ -75,6 +93,8 @@ void VendingMachine::productSelectionEvent(int t_productSelection) {
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Validation
         TRANSITION_MAP_ENTRY (ST_VALIDATION)  // ST_Transaction
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Deployment
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Advertising
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Confirmation
     END_TRANSITION_MAP(pData)
 }
 
@@ -105,35 +125,27 @@ void VendingMachine::ST_Devolution(EventData* pData) {
 void VendingMachine::ST_Validation(VendingMachineData* pData) {
     logVendingMachine.warn("(STATE)Validation");
     
-        
-    UserData user;
-    user.userOutput = "Do you confirm the purchase? Item: " + productDatabase[pData->productSelection].getName()
-                        + " $" + std::to_string(productDatabase[pData->productSelection].getValue());
-    m_interface->setUserOutput(&user);
-    m_interface->getUserInput(&user);    
-
+       
+    UserData user;  
     bool isPurchaseValid = (m_transactionCash >= productDatabase[pData->productSelection].getValue()) ? true : false;
-    bool isConfirmed = (user.userInput == "y") ? true : false;
 
-    if (isPurchaseValid && isConfirmed) {
+    if (isPurchaseValid) {
         VendingMachineData* pDataTemp = new VendingMachineData();
-        pDataTemp->productSelection = pData->productSelection;
-        m_transactionCash -= productDatabase[pData->productSelection].getValue(); 
+        pDataTemp->productSelection = pData->productSelection; 
 
         logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Valid purchase"));
-
-        InternalEvent(ST_DEPLOYMENT, pDataTemp);
+        InternalEvent(ST_CONFIRMATION, pDataTemp);  // Valid Event
     }
     else {
-        user.userOutput = "Cancelled purchase!";
+        user.userOutput = "Insufficient balance, Try put more credit";
         m_interface->setUserOutput(&user);
 
         logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Invalid purchase"));
         VendingMachineData* pDataNull = new VendingMachineData();
-        InternalEvent(ST_TRANSACTION, pDataNull);
+        InternalEvent(ST_TRANSACTION, pDataNull);   //Invalid Event
     }
 }
-
+ 
 //Increase the user cash due to input coins
 void VendingMachine::ST_Transaction(VendingMachineData* pData) {
 	logVendingMachine.warn("(STATE)Transaction");
@@ -160,4 +172,40 @@ void VendingMachine::ST_Deployment(VendingMachineData* pData) {
     m_interface->setSystemOutput(&system);
 
     InternalEvent(ST_DEVOLUTION);
+}
+
+//Show same Advertisings
+void VendingMachine::ST_Advertising(void) {
+    logVendingMachine.warn("(STATE)Advertising");
+
+    std::cout << "state advertising" << std::endl;
+
+
+    InternalEvent(ST_IDLE);
+}
+
+//Confirmation State
+void VendingMachine::ST_Confirmation(VendingMachineData* pData) {
+    logVendingMachine.warn("(STATE)Confirmation");
+
+    UserData user;
+    user.userOutput = "Do you confirm the purchase? Item: " + productDatabase[pData->productSelection].getName()
+                        + " $" + std::to_string(productDatabase[pData->productSelection].getValue());
+    m_interface->setUserOutput(&user);
+    m_interface->getUserInput(&user);
+
+    bool isConfirmed = (user.userInput == "y") ? true : false;
+
+     if (isConfirmed) {
+        VendingMachineData* pDataTemp = new VendingMachineData();
+        pDataTemp->productSelection = pData->productSelection;
+        m_transactionCash -= productDatabase[pData->productSelection].getValue(); 
+
+        InternalEvent(ST_DEPLOYMENT, pDataTemp);
+    }
+    else {
+
+        VendingMachineData* pDataNull = new VendingMachineData();
+        InternalEvent(ST_TRANSACTION, pDataNull);
+    }  
 }
