@@ -44,6 +44,7 @@ int main() {
 		else if (user->userInput == "7") VM.productSelectionEvent(Product::TEA_SLOT_B);
 		else if (user->userInput == "8") VM.productSelectionEvent(Product::WATER_SLOT);
 		else if (user->userInput == "cancel") VM.cancelEvent();
+		else if (user->userInput == "timer") VM.timerEvent();
 		else if (user->userInput == "menu") interfaceOverride->setUserOutput(user);
 		else ;
 	}

@@ -48,6 +48,7 @@ void DebugInterface::getUserInput(UserData* pData) {
 	else if (pData->userInput == ",") pData->userInput = "y";
 	else if (pData->userInput == "+") pData->userInput = "cancel";
 	else if (pData->userInput == ";") pData->userInput = "menu";
+	else if (pData->userInput == "t") pData->userInput = "timer";
 	else ;
 }
 
