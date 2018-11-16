@@ -178,8 +178,6 @@ void VendingMachine::ST_Deployment(VendingMachineData* pData) {
 void VendingMachine::ST_Advertising(void) {
     logVendingMachine.warn("(STATE)Advertising");
 
-    std::cout << "state advertising" << std::endl;
-
 
     InternalEvent(ST_IDLE);
 }

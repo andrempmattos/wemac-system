@@ -24,7 +24,7 @@ Queue::~Queue() {
     m_head = nullptr; //Officially empty
 }
 
-void Queue::push(int t_data) {
+void Queue::push(std::string t_data) {
     Node* p = m_head;
     Node* q = m_head;
 
@@ -39,10 +39,10 @@ void Queue::push(int t_data) {
     }
 }
 
-int Queue::pop() {
-    int data = 0;
+std::string Queue::pop() {
+    std::string data = "null";
     if (m_head != nullptr) {
-        data = m_head->getNodeData();
+        std::string data = m_head->getNodeData();
         Node* m_oldHead = m_head;
         m_head = m_head->getNextNode();
         delete m_oldHead;
@@ -50,8 +50,8 @@ int Queue::pop() {
     return data;
 }
 
-int Queue::cPop() {
-    int data = 0;
+std::string Queue::cPop() {
+    std::string data = "null";
     if(m_head != nullptr) {
         data = m_head->getNodeData();
         Node* m_oldHead = m_head;
@@ -59,5 +59,21 @@ int Queue::cPop() {
         this->push(data);
         delete m_oldHead;
     }
+    return data;
+}
+
+void Queue::dPop() {
+    if(m_head != nullptr) {
+        Node* m_oldHead = m_head;
+        m_head = m_head->getNextNode();
+        delete m_oldHead;
+    }
+}
+
+std::string Queue::getdataHead() {
+    std::string data = 0;
+    if(m_head != nullptr) 
+        data = m_head->getNodeData();
+
     return data;
 }

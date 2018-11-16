@@ -11,9 +11,11 @@ namespace VMCore {
         public:
             Queue() : m_head(nullptr) {}
             ~Queue();
-            int pop();
-            void push(int t_data);
-            int cPop();			
+            std::string pop();          // Normal Pop
+            std::string cPop();         // Circular Pop
+            void dPop();        // Pop and delete
+            void push(std::string t_data);
+            std::string getdataHead();		
     };
 }
 

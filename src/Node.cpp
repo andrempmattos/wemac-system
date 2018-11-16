@@ -12,9 +12,10 @@
 
 #include "Node.hpp"
 
+
 using namespace VMCore;
 
-int Node::getNodeData() {
+std::string Node::getNodeData() {
     return m_nodeData;
 }
 
@@ -22,7 +23,7 @@ Node* Node::getNextNode() {
     return m_nextNode;
 }
 
-void Node::setNodeData(int t_nodeData) {
+void Node::setNodeData(std::string t_nodeData) {
     m_nodeData = t_nodeData;
 }
 
