@@ -24,7 +24,7 @@ int main() {
 	//This code section will be integrated to the interface class in a different implementation. 
 	UserData* user = new UserData();
 	user->userOutput = ("Keyboard map\n1:COKE | 2:MEET | 3:ETIRPS | 4:GRAPE | 5:ORANGE | 6:APPLE\n7:MATE | 8:CINNAMON" \
-						"| 9:WATER | /:$0.25 | *:$0.50 | -:$1\n0:No | ,:Yes | +:Cancel | ;:Menu");
+						"| 9:WATER | /:$0.25 | *:$0.50 | -:$1\n0:No | ,:Yes | +:Cancel | ;:Menu | t:Timer");
 	interfaceOverride->setUserOutput(user);
 
 	//Continuously ask for user input interaction. 
