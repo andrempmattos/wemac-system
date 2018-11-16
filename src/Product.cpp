@@ -10,7 +10,7 @@
  * \defgroup VendingMachineCore
  */
 
-#include "Product.hpp"
+#include "../include/Product.hpp"
 
 using namespace VMCore;
 

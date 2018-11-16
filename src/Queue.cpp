@@ -10,7 +10,7 @@
  * \defgroup VendingMachineCore
  */
 
-#include "Queue.hpp"
+#include "../include/Queue.hpp"
 
 using namespace VMCore;
 

@@ -10,7 +10,7 @@
  * \defgroup Computer Debug Interface
  */
 
-#include "DebugInterface.hpp"
+#include "../include/DebugInterface.hpp"
 
 using namespace VMCore;
 

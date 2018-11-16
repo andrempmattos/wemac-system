@@ -1,7 +1,7 @@
 #ifndef VMCORE_VENDING_MACHINE_HPP
 #define VMCORE_VENDING_MACHINE_HPP
 
-#include "../include/ProjectIncludes.hpp"
+#include "ProjectIncludes.hpp"
 #include "StateMachine.hpp"
 #include "Advertising.hpp"
 #include "Interface.hpp"

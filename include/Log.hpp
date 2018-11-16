@@ -1,7 +1,7 @@
 #ifndef VMCORE_LOG_HPP
 #define VMCORE_LOG_HPP
 
-#include "../include/ProjectIncludes.hpp"
+#include "ProjectIncludes.hpp"
 
 namespace VMCore {
 	class Log {

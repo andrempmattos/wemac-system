@@ -10,7 +10,7 @@
  * \defgroup VendingMachineCore
  */
 
-#include "Log.hpp"
+#include "../include/Log.hpp"
 
 using namespace VMCore;
 

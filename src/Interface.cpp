@@ -10,7 +10,7 @@
  * \defgroup VendingMachineCore
  */
 
-#include "Interface.hpp"
+#include "../include/Interface.hpp"
 
 using namespace VMCore;
 

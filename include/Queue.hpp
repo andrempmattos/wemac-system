@@ -2,7 +2,7 @@
 #define VMCORE_QUEUE_HPP
 
 #include "Node.hpp"
-#include "../include/ProjectIncludes.hpp"
+#include "ProjectIncludes.hpp"
 
 namespace VMCore {
     class Queue {

@@ -1,4 +1,16 @@
-#include "Advertising.hpp"
+/**
+ * \file Advertising class 
+ * \brief It implements the advertising system
+ * 
+ * \author André Mattos <andrempmattos@gmail.com>
+ * \author Daniel Baron <zdaniz22@gmail.com>
+ * 
+ * \date 11/06/2017
+ * 
+ * \defgroup VendingMachineCore
+ */
+
+#include "../include/Advertising.hpp"
 
 using namespace VMCore;
 

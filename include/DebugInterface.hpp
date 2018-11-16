@@ -2,7 +2,7 @@
 #define VMCORE_DEBUG_INTERFACE_HPP
 
 #include "Interface.hpp"
-#include "../include/ProjectIncludes.hpp"
+#include "ProjectIncludes.hpp"
 
 namespace VMCore {
 	class DebugInterface : public Interface {

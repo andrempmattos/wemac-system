@@ -10,8 +10,8 @@
  * \defgroup VendingMachineCore
  */
 
-#include "VendingMachine.hpp"
-#include "DebugInterface.hpp"
+#include "../include/VendingMachine.hpp"
+#include "../include/DebugInterface.hpp"
 #include "../include/ProjectIncludes.hpp"
 
 //Debug main file version (first project checkpoint/assigment).

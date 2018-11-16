@@ -2,7 +2,7 @@
 #define VMCORE_PRODUCT_HPP
 
 #include "Log.hpp"
-#include "../include/ProjectIncludes.hpp"
+#include "ProjectIncludes.hpp"
 
 namespace VMCore {
 	struct productInfo {

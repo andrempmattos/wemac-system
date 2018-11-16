@@ -10,7 +10,7 @@
  * \defgroup VendingMachineCore
  */
 
-#include "StateMachine.hpp"
+#include "../include/StateMachine.hpp"
 //#include <assert.h>
 
 using namespace VMCore;
