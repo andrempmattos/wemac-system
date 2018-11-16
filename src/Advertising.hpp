@@ -18,7 +18,6 @@ namespace VMCore {
             std::string getAdvertising();
             void addAdvertising(std::string);
             void removeAdvertising(std::string);
-            void getAdvertisingDatabase(std::vector<advertisingInfo> &pData);
 
             
     };  

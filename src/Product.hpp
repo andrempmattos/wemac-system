@@ -31,7 +31,7 @@ namespace VMCore {
 			int getId(void);
 			void setId(ProductID t_id);
 		
-		protected:
+		public:
 			Product();
 			Product(std::string t_name, float t_value, int t_stock, ProductID t_id) : 
 					m_name(t_name), m_value(t_value), m_stock(t_stock), m_id(t_id) {}
