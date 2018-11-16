@@ -16,11 +16,11 @@ using namespace VMCore;
 
 Product::Product(void) {
 	logProduct->setLevel(Log::levelInfo);
-	logProduct->warn("(CONSTRUCTOR) Product");
+	logProduct->warn("(CONSTRUCTOR)Product");
 }
 
 Product::~Product(void) {
-	logProduct->warn("(DESTRUCTOR) Product");
+	logProduct->warn("(DESTRUCTOR)Product");
 }
 
 
@@ -69,7 +69,7 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
 
   	ifstream products("src/../include/ProductDatabase.txt");
   	if (products.is_open()) {
-  		logProduct->warn("(Database) Product database data");
+  		logProduct->warn("(Database)Product database data");
 		
 		while(getline(products, line)) {
 			for (int i = 0; i < 4; i++) {
@@ -95,7 +95,7 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
     	products.close();
   	}
   	else {
-  		logProduct->error("(Database) Unable to open file");
+  		logProduct->error("(Database)Unable to open file");
   	}
 
 }

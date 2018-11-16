@@ -29,6 +29,7 @@ namespace VMCore {
         private:
             Log* logVendingMachine = new Log("[VMCORE]");
             
+            float m_totalMachineCash = 0;
             float m_transactionCash = 0;
             Interface* m_interface = nullptr;
             Product* productDatabase = nullptr;
