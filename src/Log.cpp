@@ -18,10 +18,6 @@ void Log::setLevel(Level t_level) {
 	m_logLevel = t_level;
 }
 
-void Log::setScope(std::string t_scope) {
-	m_scope = t_scope;
-}
-
 void Log::error(std::string t_message) {
 	if (m_logLevel >= levelError) {
 		std::cout << m_scope << "[ERROR]:" << t_message << std::endl; 

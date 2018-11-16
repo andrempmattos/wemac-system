@@ -11,37 +11,38 @@
  */
 
 #include "../include/VendingMachine.hpp"
-#include <iostream>
 
 using namespace VMCore;
 
 VendingMachine::VendingMachine(Interface* t_interfaceOverride) : StateMachine(ST_MAX_STATES) {
 
     //Log system setup
-    logVendingMachine.setLevel(Log::levelError);
-    logVendingMachine.setScope("[VMCORE]");
-    logVendingMachine.warn("(CONSTRUCTOR)VendingMachine");
+    logVendingMachine->setLevel(Log::levelDebug);
+    
 
     //Change the interface used
     m_interface = t_interfaceOverride;
 
     //Add the product database into the system
     productDatabase = new Product[Product::MAX_VM_SLOTS];
-
     std::vector<productInfo> pData(Product::MAX_VM_SLOTS);
-    productDatabase->getProductDatabase(pData);
-    
+    productDatabase->getProductDatabase(pData);    
     productDatabase->setProductDatabase(productDatabase, pData);
-
-    logVendingMachine.debug("Product database ready");    
+    //logVendingMachine->debug("Product database ready");    
 } 
+
+VendingMachine::~VendingMachine() {
+    logVendingMachine->warn("(DESTRUCTOR) VendingMachine");
+}
 
 //Timer VendingMachine external event
 void VendingMachine::timerEvent(void) {
+    logVendingMachine->warn("(EXTERNAL_EVENT) Timer");
+    
     //Given the timer event, transition to a new state based upon 
     //the current state of the state machine
     BEGIN_TRANSITION_MAP                      // - Current State -
-        TRANSITION_MAP_ENTRY (ST_ADVERTISING)  // ST_Idle
+        TRANSITION_MAP_ENTRY (ST_ADVERTISING) // ST_Idle
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Devolution
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Validation
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Transaction
@@ -49,12 +50,13 @@ void VendingMachine::timerEvent(void) {
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Advertising
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Confirmation
     END_TRANSITION_MAP(nullptr)
+
 }
 
 //Cancel VendingMachine external event
 void VendingMachine::cancelEvent(void) {
-    //Given the cancel event, transition to a new state based upon 
-    //the current state of the state machine
+    logVendingMachine->warn("(EXTERNAL_EVENT) Cancel");
+
     BEGIN_TRANSITION_MAP                      // - Current State -
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Idle
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Devolution
@@ -68,6 +70,8 @@ void VendingMachine::cancelEvent(void) {
 
 //Increment VendingMachine cash external event
 void VendingMachine::cashIncrementEvent(float t_inputCash) {
+    logVendingMachine->warn("(EXTERNAL_EVENT) Cash increment");
+    
     VendingMachineData* pData = new VendingMachineData();
     pData->cashValue = t_inputCash;
 
@@ -84,6 +88,8 @@ void VendingMachine::cashIncrementEvent(float t_inputCash) {
 
 //Select VendingMachine product external event
 void VendingMachine::productSelectionEvent(int t_productSelection) {
+    logVendingMachine->warn("(EXTERNAL_EVENT) Product selection");
+    
     VendingMachineData* pData = new VendingMachineData();
     pData->productSelection = t_productSelection;
 
@@ -96,21 +102,18 @@ void VendingMachine::productSelectionEvent(int t_productSelection) {
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Advertising
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Confirmation
     END_TRANSITION_MAP(pData)
+
 }
 
 //State machine sits here when there is any user interaction
 void VendingMachine::ST_Idle(EventData* pData) {
-    logVendingMachine.warn("(STATE)Idle");
-
-    AdvertisingData advertising;
-    advertising.advertisingOutput = "Propaganda $$$";
-    m_interface->printAdvertising(&advertising);
+    logVendingMachine->warn("(STATE)Idle");
 }
 
 //Give back the current user cash 
 void VendingMachine::ST_Devolution(EventData* pData) {
-	logVendingMachine.warn("(STATE)Devolution");
-    logVendingMachine.info(("(DEVOLUTION)" + std::to_string(m_transactionCash)));
+	logVendingMachine->warn("(STATE)Devolution");
+    logVendingMachine->info(("(DEVOLUTION)" + std::to_string(m_transactionCash)));
 
     UserData user;
     user.userOutput = "Devolution: $" + std::to_string(m_transactionCash);
@@ -118,12 +121,13 @@ void VendingMachine::ST_Devolution(EventData* pData) {
     
     m_transactionCash = 0;
     
+    logVendingMachine->warn("(INTERNAL_EVENT) ST_Devolution to ST_Idle");
     InternalEvent(ST_IDLE);
 }
 
 //Check if the transaction is valid due to the user product selection 
 void VendingMachine::ST_Validation(VendingMachineData* pData) {
-    logVendingMachine.warn("(STATE)Validation");
+    logVendingMachine->warn("(STATE)Validation");
     
        
     UserData user;  
@@ -133,14 +137,16 @@ void VendingMachine::ST_Validation(VendingMachineData* pData) {
         VendingMachineData* pDataTemp = new VendingMachineData();
         pDataTemp->productSelection = pData->productSelection; 
 
-        logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Valid purchase"));
+        logVendingMachine->info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Valid purchase"));
+        logVendingMachine->warn("(INTERNAL_EVENT) ST_Validation to ST_Confirmation");
         InternalEvent(ST_CONFIRMATION, pDataTemp);  // Valid Event
     }
     else {
         user.userOutput = "Insufficient balance, Try put more credit";
         m_interface->setUserOutput(&user);
 
-        logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Invalid purchase"));
+        logVendingMachine->info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Invalid purchase"));
+        logVendingMachine->warn("(INTERNAL_EVENT) ST_Validation to ST_Transaction");
         VendingMachineData* pDataNull = new VendingMachineData();
         InternalEvent(ST_TRANSACTION, pDataNull);   //Invalid Event
     }
@@ -148,9 +154,9 @@ void VendingMachine::ST_Validation(VendingMachineData* pData) {
  
 //Increase the user cash due to input coins
 void VendingMachine::ST_Transaction(VendingMachineData* pData) {
-	logVendingMachine.warn("(STATE)Transaction");
+	logVendingMachine->warn("(STATE)Transaction");
     m_transactionCash += (pData->cashValue);
-    logVendingMachine.info(("(TOTAL) $" + std::to_string(m_transactionCash)));
+    logVendingMachine->info(("(TOTAL) $" + std::to_string(m_transactionCash)));
 
     UserData user;
     user.userOutput = "Current cash: $" + std::to_string(m_transactionCash);
@@ -159,8 +165,8 @@ void VendingMachine::ST_Transaction(VendingMachineData* pData) {
 
 //Deploy the selected product to the user
 void VendingMachine::ST_Deployment(VendingMachineData* pData) {
-    logVendingMachine.warn("(STATE)Deployment");
-    logVendingMachine.info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Deploying"));
+    logVendingMachine->warn("(STATE)Deployment");
+    logVendingMachine->info(("(PRODUCT)" + productDatabase[pData->productSelection].getName() + " | Deploying"));
     
     UserData user;
     user.userOutput = "Deploying: " + productDatabase[pData->productSelection].getName()
@@ -171,20 +177,25 @@ void VendingMachine::ST_Deployment(VendingMachineData* pData) {
     system.systemOutput = "(Event)Product deployment";
     m_interface->setSystemOutput(&system);
 
+    logVendingMachine->warn("(INTERNAL_EVENT) ST_Deployment to ST_Devolution");
     InternalEvent(ST_DEVOLUTION);
 }
 
 //Show same Advertisings
 void VendingMachine::ST_Advertising(void) {
-    logVendingMachine.warn("(STATE)Advertising");
+    logVendingMachine->warn("(STATE)Advertising");
 
+    AdvertisingData advertising;
+    advertising.advertisingOutput = "Propaganda $$$";
+    m_interface->printAdvertising(&advertising);
 
+    logVendingMachine->warn("(INTERNAL_EVENT) ST_Advertising to ST_Idle");
     InternalEvent(ST_IDLE);
 }
 
 //Confirmation State
 void VendingMachine::ST_Confirmation(VendingMachineData* pData) {
-    logVendingMachine.warn("(STATE)Confirmation");
+    logVendingMachine->warn("(STATE)Confirmation");
 
     UserData user;
     user.userOutput = "Do you confirm the purchase? Item: " + productDatabase[pData->productSelection].getName()
@@ -194,15 +205,22 @@ void VendingMachine::ST_Confirmation(VendingMachineData* pData) {
 
     bool isConfirmed = (user.userInput == "y") ? true : false;
 
-     if (isConfirmed) {
+    if (isConfirmed) {
         VendingMachineData* pDataTemp = new VendingMachineData();
         pDataTemp->productSelection = pData->productSelection;
         m_transactionCash -= productDatabase[pData->productSelection].getValue(); 
 
+        user.userOutput = "Thank you for your preference!";
+        m_interface->setUserOutput(&user);
+
+        logVendingMachine->warn("(INTERNAL_EVENT) ST_Confirmation to ST_Deployment");
         InternalEvent(ST_DEPLOYMENT, pDataTemp);
     }
     else {
+        user.userOutput = "Purchase canceled";
+        m_interface->setUserOutput(&user);
 
+        logVendingMachine->warn("(INTERNAL_EVENT) ST_Confirmation to ST_Transaction");
         VendingMachineData* pDataNull = new VendingMachineData();
         InternalEvent(ST_TRANSACTION, pDataNull);
     }  

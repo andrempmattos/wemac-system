@@ -19,6 +19,7 @@ namespace VMCore {
     class VendingMachine: public StateMachine {
         public:
             VendingMachine(Interface* t_interfaceOverride);
+            ~VendingMachine();
 
             //External events taken by this state machine
             void timerEvent();
@@ -26,11 +27,11 @@ namespace VMCore {
             void cashIncrementEvent(float t_inputCash);
             void productSelectionEvent(int t_productSelection);
         private:
+            Log* logVendingMachine = new Log("[VMCORE]");
+            
             float m_transactionCash = 0;
             Interface* m_interface = nullptr;
             Product* productDatabase = nullptr;
-            Log logVendingMachine;
-
 
             //State machine state functions
             void ST_Idle(EventData*);
