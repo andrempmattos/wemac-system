@@ -2,16 +2,24 @@
 #define VMCORE_ADVERTISING_HPP
 
 #include "Queue.hpp"
+#include "Log.hpp"
 
 namespace VMCore {
+
+
     class Advertising {
         private:    
-           Queue queue;
+           Queue mainQueue;
+           Queue removedQueue;
+           
         public:
             Advertising();
             ~Advertising();
-            int getAdvertising();
-            void addAdvertising(int);
+            std::string getAdvertising();
+            void addAdvertising(std::string);
+            void removeAdvertising(std::string);
+            void getAdvertisingDatabase(std::vector<advertisingInfo> &pData);
+
             
     };  
 }
