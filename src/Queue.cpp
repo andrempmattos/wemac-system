@@ -42,7 +42,7 @@ void Queue::push(std::string t_data) {
 std::string Queue::pop() {
     std::string data = "null";
     if (m_head != nullptr) {
-        std::string data = m_head->getNodeData();
+        data = m_head->getNodeData();
         Node* m_oldHead = m_head;
         m_head = m_head->getNextNode();
         delete m_oldHead;
