@@ -19,11 +19,13 @@ namespace VMCore {
     class VendingMachine: public StateMachine {
         public:
             VendingMachine(Interface* t_interfaceOverride);
+            VendingMachine();
             ~VendingMachine();
 
             //External events taken by this state machine
             void timerEvent();
             void cancelEvent();
+            void confirmationEvent(int t_productSelection);
             void cashIncrementEvent(float t_inputCash);
             void productSelectionEvent(int t_productSelection);
         private:
