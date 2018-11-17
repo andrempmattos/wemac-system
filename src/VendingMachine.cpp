@@ -18,7 +18,7 @@ VendingMachine::VendingMachine(Interface* t_interfaceOverride) : StateMachine(ST
 
     //Log system setup
     logVendingMachine->setLevel(Log::levelDebug);   
-    logVendingMachine->warn("(CONSTRUCTOR) VendingMachine");
+    logVendingMachine->warn("(CONSTRUCTOR)VendingMachine");
     
     //Change the interface used
     m_interface = t_interfaceOverride;

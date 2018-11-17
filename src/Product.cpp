@@ -84,10 +84,10 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
 				pData[j].id  = (i == 3)   ? stoi(data[i]) : pData[j].id;
 			}
 
-			logProduct->debug(pData[j].name);
-			logProduct->debug(to_string(pData[j].value));
-			logProduct->debug(to_string(pData[j].stock));
-			logProduct->debug(to_string(pData[j].id));
+			logProduct->debug("(Name )" + pData[j].name);
+			logProduct->debug("(Value)" + to_string(pData[j].value));
+			logProduct->debug("(Stock)" + to_string(pData[j].stock));
+			logProduct->debug("(Id   )" + to_string(pData[j].id));
 			j++;
 			contentStartPos = 0;
 			contentEndPos = 0;

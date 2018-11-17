@@ -12,6 +12,10 @@ namespace VMCore {
 		private:
 			Level m_logLevel = levelInfo;
 			std::string m_scope;
+
+			std::ofstream logFile;
+			std::string logFileLocation = "src/../include/LogSection.txt";
+
 		public:
 			Log(std::string t_scope) : m_scope(t_scope) {}
 			void setLevel(Level t_level);
