@@ -50,7 +50,6 @@ void VendingMachine::timerEvent(void) {
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Advertising
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Confirmation
     END_TRANSITION_MAP(nullptr)
-
 }
 
 //Cancel VendingMachine external event

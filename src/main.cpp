@@ -17,53 +17,22 @@
 using namespace std::chrono;
 using namespace VMCore;
 
-//Determine our platform's tic period
-const double microsPerClkTic{1.0E6 * system_clock::period::num / system_clock::period::den};
-
-//Our REQUIRED processing period
+//Required processing period
 const milliseconds intervalPeriodMillis{100};
 
 //Initialize the chrono timepoints 
 system_clock::time_point currentStartTime{system_clock::now()};
 system_clock::time_point nextStartTime{currentStartTime};
 
-//loop counter
-int timerCounter;
-
 //Application objects
 Interface* interfaceOverride = new DebugInterface();
 VendingMachine* machineCore = new VendingMachine(interfaceOverride);
-void* pMachineCore = /*(void*)*/machineCore;
 
-/*
-int main() {
-	while (true) {
-		//Get our current "wakeup" time
-		currentStartTime = system_clock::now();
+//VMThread loop counter
+int timerCounter;
 
-		//Determine the point in time at which we want to wakeup for the
-		//next pass through the loop.
-		nextStartTime = currentStartTime + intervalPeriodMillis;
-		
-		//Timer for advertising switch
-		++timerCounter;
-		if (timerCounter%100 == 0) {
-			std::cout << "propaganda" << std::endl;
-			timerCounter = 0;
-		}
-
-		//User inputs
-		UserData* user = new UserData();
-		//interfaceOverride->getUserInput(user);
-		//interfaceOverride->decodeUserInput(user);
-
-		//Sleep till our next period start time
-		std::this_thread::sleep_until(nextStartTime);
-	}
-
-	delete interfaceOverride;
-}
-*/
+//Generic pointer for extern usage
+void* pMachineCore = machineCore;
 
 int main() {
 	std::atomic<bool> interrupted;
@@ -78,29 +47,28 @@ int main() {
 				//Get our current "wakeup" time
 				currentStartTime = system_clock::now();
 
-				//Determine the point in time at which we want to wakeup for the
-				//next pass through the loop.
+				//Determine the point in time at which the system wakeup for the next pass through the loop.
 				nextStartTime = currentStartTime + intervalPeriodMillis;
 				
-				//Timer for advertising switch
+				//Timer count for advertising switch
 				++timerCounter;
 				if (timerCounter % 100 == 0) {
 					machineCore->timerEvent();
 					timerCounter = 0;
 				}
 
-				//User input handler
+				//User input decoder
 				interfaceOverride->decodeUserInput(user);
 
-				//Sleep till our next period start time
+				//Sleep until the next period start time
 				std::this_thread::sleep_until(nextStartTime);
 			}
 		});
 
-	//User inputs
+	//User inputs handler
 	interfaceOverride->getUserInput(user);
 
-	// when input is complete, interrupt thread and wait for it to finish
+	//When input is complete, interrupt thread and wait for it to finish
 	interrupted.store(true);
 	VMThread.join();
 

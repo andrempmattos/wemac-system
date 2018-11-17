@@ -15,7 +15,7 @@
 using namespace VMCore;
 
 Product::Product(void) {
-	logProduct->setLevel(Log::levelInfo);
+	logProduct->setLevel(Log::noLog);
 	logProduct->warn("(CONSTRUCTOR)Product");
 }
 
