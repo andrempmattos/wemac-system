@@ -21,8 +21,8 @@ Product::Product(void) {
 
 Product::~Product(void) {
 	logProduct->warn("(DESTRUCTOR)Product");
+	delete logProduct;
 }
-
 
 int Product::getId(void) {
 	return m_id;	
@@ -67,7 +67,7 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
 	int dataLength = 0;
 	int j = 0;
 
-  	ifstream products("src/../include/ProductDatabase.txt");
+  	ifstream products("src/../include/_ProductDatabase.txt");
   	if (products.is_open()) {
   		logProduct->warn("(Database)Product database data");
 		

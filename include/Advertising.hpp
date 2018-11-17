@@ -6,17 +6,15 @@
 #include "ProjectIncludes.hpp"
 
 namespace VMCore {
-    class Advertising {
-        private:    
-           Queue mainQueue;
-           Queue removedQueue;
-           
+    class Advertising {      
+        private:
+            Queue advertisingQueue;
+            Log* logAdvertising = new Log("[ADVERTISING]"); 
         public:
             Advertising();
             ~Advertising();
-            std::string getAdvertising();
-            void addAdvertising(std::string);
-            void removeAdvertising(std::string);
+            std::string getAdvertising(void);
+            void getAdvertisingDatabase(void);
     };  
 }
 

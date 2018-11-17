@@ -15,28 +15,36 @@
 using namespace VMCore;
 
 Advertising::Advertising() {
-
+	logAdvertising->setLevel(Log::noLog);
+	logAdvertising->warn("(CONSTRUCTOR)Advertising");
+	getAdvertisingDatabase();
 }
 
 Advertising::~Advertising() {
-
+	logAdvertising->warn("(DESTRUCTOR)Advertising");
+	delete logAdvertising;
 }
 
 std::string Advertising::getAdvertising(void) {
-
-	if(mainQueue.getdataHead() == removedQueue.getdataHead()) {  // Delete the advertising at the main Queue if that is equal to the head of the removedQueue.
-		mainQueue.dPop();
-		removedQueue.dPop();
-	}
-	
-	return mainQueue.cPop();
+	return advertisingQueue.peekCyclic();
 }
 
-void Advertising::addAdvertising(std::string text) {
-	mainQueue.push(text);
-}
+void Advertising::getAdvertisingDatabase(void) {
+	using namespace std;
+	string line;
 
-void Advertising::removeAdvertising(std::string advertisingID) { 
-	removedQueue.push(advertisingID);			// Add in this queue the advertising that will be removed
-}
+  	ifstream advertising("src/../include/_AdvertisingDatabase.txt");
+  	if (advertising.is_open()) {
+  		logAdvertising->warn("(Database)Advertising database data");
+		
+		while(getline(advertising, line)) {
+			advertisingQueue.enqueue(line);
+			logAdvertising->debug("(Database)" + advertisingQueue.peek());			
+		}
+    	advertising.close();
+  	}
+  	else {
+  		logAdvertising->error("(Database)Unable to open file");
+  	}
 
+}

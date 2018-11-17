@@ -74,6 +74,8 @@ int main() {
 
 	}
 
-	delete interfaceOverride;
+	delete user;
 	delete machineCore;
+	delete interfaceOverride;
+
 }

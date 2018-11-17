@@ -24,7 +24,7 @@ Queue::~Queue() {
     m_head = nullptr; //Officially empty
 }
 
-void Queue::push(std::string t_data) {
+void Queue::enqueue(std::string t_data) {
     Node* p = m_head;
     Node* q = m_head;
 
@@ -39,8 +39,8 @@ void Queue::push(std::string t_data) {
     }
 }
 
-std::string Queue::pop() {
-    std::string data = "null";
+std::string Queue::dequeue() {
+    std::string data = "";
     if (m_head != nullptr) {
         data = m_head->getNodeData();
         Node* m_oldHead = m_head;
@@ -50,30 +50,22 @@ std::string Queue::pop() {
     return data;
 }
 
-std::string Queue::cPop() {
-    std::string data = "null";
-    if(m_head != nullptr) {
-        data = m_head->getNodeData();
-        Node* m_oldHead = m_head;
-        m_head = m_head->getNextNode();
-        this->push(data);
-        delete m_oldHead;
-    }
-    return data;
-}
-
-void Queue::dPop() {
-    if(m_head != nullptr) {
-        Node* m_oldHead = m_head;
-        m_head = m_head->getNextNode();
-        delete m_oldHead;
-    }
-}
-
-std::string Queue::getdataHead() {
-    std::string data = 0;
+std::string Queue::peek() {
+    std::string data = "";
     if(m_head != nullptr) 
         data = m_head->getNodeData();
 
+    return data;
+}
+
+std::string Queue::peekCyclic() {
+    std::string data = "";
+    if(m_head != nullptr) {
+        data = m_head->getNodeData();
+        Node* m_oldHead = m_head;
+        m_head = m_head->getNextNode();
+        this->enqueue(data);
+        delete m_oldHead;
+    }
     return data;
 }

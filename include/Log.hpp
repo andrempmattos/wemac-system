@@ -14,7 +14,7 @@ namespace VMCore {
 			std::string m_scope;
 
 			std::ofstream logFile;
-			std::string logFileLocation = "src/../include/LogSection.txt";
+			std::string logFileLocation = "src/../include/_LogSection.txt";
 
 		public:
 			Log(std::string t_scope) : m_scope(t_scope) {}

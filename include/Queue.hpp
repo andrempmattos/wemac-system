@@ -11,11 +11,10 @@ namespace VMCore {
         public:
             Queue() : m_head(nullptr) {}
             ~Queue();
-            std::string pop();          // Normal Pop
-            std::string cPop();         // Circular Pop
-            void dPop();        // Pop and delete
-            void push(std::string t_data);
-            std::string getdataHead();		
+            void enqueue(std::string t_data); //Add(store) an item to the queue
+            std::string dequeue(void);        //Remove(access) an item from the queue
+            std::string peek(void);           //Gets the element at the front of the queue without removing it
+            std::string peekCyclic();         //Gets the element at the front of the queue and send to the back
     };
 }
 

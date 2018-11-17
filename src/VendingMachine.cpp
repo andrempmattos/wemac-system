@@ -33,6 +33,9 @@ VendingMachine::VendingMachine(Interface* t_interfaceOverride) : StateMachine(ST
 
 VendingMachine::~VendingMachine() {
     logVendingMachine->warn("(DESTRUCTOR)VendingMachine");
+
+    delete advertisingMessage;
+    delete[] productDatabase;
 }
 
 //Timer VendingMachine external event
@@ -230,14 +233,18 @@ void VendingMachine::ST_Deployment(VendingMachineData* pData) {
     InternalEvent(ST_DEVOLUTION);
 }
 
-//Show same Advertisings
+//Display and switch advertising
 void VendingMachine::ST_Advertising(void) {
     logVendingMachine->warn("(STATE)Advertising");
 
+    std::string advertisingText; 
+    advertisingText = advertisingMessage->getAdvertising();
+
     AdvertisingData advertising;
-    advertising.advertisingOutput = "Propaganda $$$";
+    advertising.advertisingOutput = advertisingText;
     m_interface->printAdvertising(&advertising);
 
+    logVendingMachine->warn("(ADVERTISING)" + advertisingText);
     logVendingMachine->warn("(INTERNAL_EVENT)ST_Advertising to ST_Idle");
     InternalEvent(ST_IDLE);
 }

@@ -35,6 +35,7 @@ namespace VMCore {
             float m_transactionCash = 0;
             Interface* m_interface = nullptr;
             Product* productDatabase = nullptr;
+            Advertising* advertisingMessage = new Advertising();
 
             //State machine state functions
             void ST_Idle(EventData*);
