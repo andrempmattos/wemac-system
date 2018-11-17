@@ -7,5 +7,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <chrono>
+#include <thread>
+#include <atomic>
 
 #endif

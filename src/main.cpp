@@ -14,41 +14,98 @@
 #include "../include/DebugInterface.hpp"
 #include "../include/ProjectIncludes.hpp"
 
-//Debug main file version (first project checkpoint/assigment).
+using namespace std::chrono;
+using namespace VMCore;
+
+//Determine our platform's tic period
+const double microsPerClkTic{1.0E6 * system_clock::period::num / system_clock::period::den};
+
+//Our REQUIRED processing period
+const milliseconds intervalPeriodMillis{100};
+
+//Initialize the chrono timepoints 
+system_clock::time_point currentStartTime{system_clock::now()};
+system_clock::time_point nextStartTime{currentStartTime};
+
+//loop counter
+int timerCounter;
+
+//Application objects
+Interface* interfaceOverride = new DebugInterface();
+VendingMachine* machineCore = new VendingMachine(interfaceOverride);
+void* pMachineCore = /*(void*)*/machineCore;
+
+/*
 int main() {
-	using namespace VMCore;
+	while (true) {
+		//Get our current "wakeup" time
+		currentStartTime = system_clock::now();
 
-	Interface* interfaceOverride = new DebugInterface();
-	VendingMachine VM(interfaceOverride);
-
-	//This code section will be integrated to the interface class in a different implementation. 
-	UserData* user = new UserData();
-	user->userOutput = ("Keyboard map\n1:COKE | 2:MEET | 3:ETIRPS | 4:GRAPE | 5:ORANGE | 6:APPLE\n7:MATE | 8:CINNAMON" \
-						"| 9:WATER | /:$0.25 | *:$0.50 | -:$1\n0:No | ,:Yes | +:Cancel | ;:Menu | t:Timer");
-	interfaceOverride->setUserOutput(user);
-
-	//Continuously ask for user input interaction. 
-	while(true) {
-		interfaceOverride->getUserInput(user);
+		//Determine the point in time at which we want to wakeup for the
+		//next pass through the loop.
+		nextStartTime = currentStartTime + intervalPeriodMillis;
 		
-			 if (user->userInput == "0.25") VM.cashIncrementEvent(0.25);
-		else if (user->userInput == "0.50") VM.cashIncrementEvent(0.5);
-		else if (user->userInput == "1.00") VM.cashIncrementEvent(1);
-		else if (user->userInput == "0") VM.productSelectionEvent(Product::SODA_SLOT_A);
-		else if (user->userInput == "1") VM.productSelectionEvent(Product::SODA_SLOT_B);
-		else if (user->userInput == "2") VM.productSelectionEvent(Product::SODA_SLOT_C);
-		else if (user->userInput == "3") VM.productSelectionEvent(Product::JUICE_SLOT_A);
-		else if (user->userInput == "4") VM.productSelectionEvent(Product::JUICE_SLOT_B);
-		else if (user->userInput == "5") VM.productSelectionEvent(Product::JUICE_SLOT_C);
-		else if (user->userInput == "6") VM.productSelectionEvent(Product::TEA_SLOT_A);
-		else if (user->userInput == "7") VM.productSelectionEvent(Product::TEA_SLOT_B);
-		else if (user->userInput == "8") VM.productSelectionEvent(Product::WATER_SLOT);
-		else if (user->userInput == "cancel") VM.cancelEvent();
-		else if (user->userInput == "timer") VM.timerEvent();
-		else if (user->userInput == "menu") interfaceOverride->setUserOutput(user);
-		else ;
+		//Timer for advertising switch
+		++timerCounter;
+		if (timerCounter%100 == 0) {
+			std::cout << "propaganda" << std::endl;
+			timerCounter = 0;
+		}
+
+		//User inputs
+		UserData* user = new UserData();
+		//interfaceOverride->getUserInput(user);
+		//interfaceOverride->decodeUserInput(user);
+
+		//Sleep till our next period start time
+		std::this_thread::sleep_until(nextStartTime);
 	}
 
-	delete user;
 	delete interfaceOverride;
+}
+*/
+
+int main() {
+	std::atomic<bool> interrupted;
+	UserData* user = new UserData();
+
+	while(true) {
+		interrupted.store(false);
+
+		// create a new thread that does stuff in the background
+		std::thread VMThread([&]() {
+			while(!interrupted) {
+				//Get our current "wakeup" time
+				currentStartTime = system_clock::now();
+
+				//Determine the point in time at which we want to wakeup for the
+				//next pass through the loop.
+				nextStartTime = currentStartTime + intervalPeriodMillis;
+				
+				//Timer for advertising switch
+				++timerCounter;
+				if (timerCounter % 100 == 0) {
+					machineCore->timerEvent();
+					timerCounter = 0;
+				}
+
+				//User input handler
+				interfaceOverride->decodeUserInput(user);
+
+				//Sleep till our next period start time
+				std::this_thread::sleep_until(nextStartTime);
+			}
+		});
+
+	//User inputs
+	interfaceOverride->getUserInput(user);
+
+	// when input is complete, interrupt thread and wait for it to finish
+	interrupted.store(true);
+	VMThread.join();
+
+	}
+
+	delete interfaceOverride;
+	delete machineCore;
 }
