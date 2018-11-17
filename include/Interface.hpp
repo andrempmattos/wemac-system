@@ -1,7 +1,7 @@
 #ifndef VMCORE_INTERFACE_HPP
 #define VMCORE_INTERFACE_HPP
 
-#include "../include/ProjectIncludes.hpp"
+#include "ProjectIncludes.hpp"
 
 namespace VMCore {
     struct SystemData {
@@ -30,9 +30,11 @@ namespace VMCore {
 			
 			virtual void getUserInput(UserData* = nullptr) = 0;
 			virtual void setUserOutput(UserData* = nullptr) = 0;
+			virtual void decodeUserInput(UserData* = nullptr) = 0;
 
 			virtual void printAdvertising(AdvertisingData* = nullptr) = 0;
 			virtual void insertAdvertising(AdvertisingData* = nullptr) = 0;
+
 	};
 }
 

@@ -2,7 +2,7 @@
 #define VMCORE_PRODUCT_HPP
 
 #include "Log.hpp"
-#include "../include/ProjectIncludes.hpp"
+#include "ProjectIncludes.hpp"
 
 namespace VMCore {
 	struct productInfo {
@@ -21,7 +21,7 @@ namespace VMCore {
 			};
 		
 		private:
-			Log logProduct;
+			Log* logProduct = new Log("[PRODUCT]");
 
 			std::string m_name;
 			float m_value;
@@ -35,6 +35,7 @@ namespace VMCore {
 			Product();
 			Product(std::string t_name, float t_value, int t_stock, ProductID t_id) : 
 					m_name(t_name), m_value(t_value), m_stock(t_stock), m_id(t_id) {}
+			~Product();
 
 			std::string getName();
 			float getValue();
@@ -44,7 +45,6 @@ namespace VMCore {
 			void setStock(int t_stock);
 			void getProductDatabase(std::vector<productInfo> &pData);
 			void setProductDatabase(Product* t_product, std::vector<productInfo> &pData);
-			//TODO: Add as protected instead of public
 	};	
 }
 

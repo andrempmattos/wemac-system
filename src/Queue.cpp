@@ -10,7 +10,7 @@
  * \defgroup VendingMachineCore
  */
 
-#include "Queue.hpp"
+#include "../include/Queue.hpp"
 
 using namespace VMCore;
 
@@ -24,7 +24,7 @@ Queue::~Queue() {
     m_head = nullptr; //Officially empty
 }
 
-void Queue::push(int t_data) {
+void Queue::enqueue(std::string t_data) {
     Node* p = m_head;
     Node* q = m_head;
 
@@ -39,12 +39,32 @@ void Queue::push(int t_data) {
     }
 }
 
-int Queue::pop() {
-    int data = 0;
+std::string Queue::dequeue() {
+    std::string data = "";
     if (m_head != nullptr) {
         data = m_head->getNodeData();
         Node* m_oldHead = m_head;
         m_head = m_head->getNextNode();
+        delete m_oldHead;
+    }
+    return data;
+}
+
+std::string Queue::peek() {
+    std::string data = "";
+    if(m_head != nullptr) 
+        data = m_head->getNodeData();
+
+    return data;
+}
+
+std::string Queue::peekCyclic() {
+    std::string data = "";
+    if(m_head != nullptr) {
+        data = m_head->getNodeData();
+        Node* m_oldHead = m_head;
+        m_head = m_head->getNextNode();
+        this->enqueue(data);
         delete m_oldHead;
     }
     return data;

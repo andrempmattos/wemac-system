@@ -10,15 +10,19 @@
  * \defgroup VendingMachineCore
  */
 
-#include "Product.hpp"
+#include "../include/Product.hpp"
 
 using namespace VMCore;
 
 Product::Product(void) {
-	logProduct.setLevel(Log::levelInfo);
-	logProduct.setScope("[PRODUCT]");
+	logProduct->setLevel(Log::noLog);
+	logProduct->warn("(CONSTRUCTOR)Product");
 }
 
+Product::~Product(void) {
+	logProduct->warn("(DESTRUCTOR)Product");
+	delete logProduct;
+}
 
 int Product::getId(void) {
 	return m_id;	
@@ -63,9 +67,9 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
 	int dataLength = 0;
 	int j = 0;
 
-  	ifstream products("src/../include/ProductDatabase.txt");
+  	ifstream products("src/../include/_ProductDatabase.txt");
   	if (products.is_open()) {
-  		logProduct.debug("Product database data");
+  		logProduct->warn("(Database)Product database data");
 		
 		while(getline(products, line)) {
 			for (int i = 0; i < 4; i++) {
@@ -80,10 +84,10 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
 				pData[j].id  = (i == 3)   ? stoi(data[i]) : pData[j].id;
 			}
 
-			logProduct.debug(pData[j].name);
-			logProduct.debug(to_string(pData[j].value));
-			logProduct.debug(to_string(pData[j].stock));
-			logProduct.debug(to_string(pData[j].id));
+			logProduct->debug("(Name )" + pData[j].name);
+			logProduct->debug("(Value)" + to_string(pData[j].value));
+			logProduct->debug("(Stock)" + to_string(pData[j].stock));
+			logProduct->debug("(Id   )" + to_string(pData[j].id));
 			j++;
 			contentStartPos = 0;
 			contentEndPos = 0;
@@ -91,7 +95,7 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
     	products.close();
   	}
   	else {
-  		logProduct.error("Unable to open file");
+  		logProduct->error("(Database)Unable to open file");
   	}
 
 }
