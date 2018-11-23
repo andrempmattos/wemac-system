@@ -81,11 +81,6 @@ void VendingMachine::confirmationEvent(int t_productSelection) {
     VendingMachineData* pData = new VendingMachineData();
     pData->productSelection = t_productSelection;
 
-    m_transactionCash -= productDatabase[pData->productSelection].getValue(); 
-    UserData user;
-    user.userOutput = "Thank you for your preference!";
-    m_interface->setUserOutput(&user);
-
     BEGIN_TRANSITION_MAP                      // - Current State -
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Idle
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  // ST_Devolution
@@ -216,10 +211,14 @@ void VendingMachine::ST_Deployment(VendingMachineData* pData) {
     int stockTemp = productDatabase[pData->productSelection].getStock();
     productDatabase[pData->productSelection].setStock((stockTemp-1));
 
+    m_transactionCash -= productDatabase[pData->productSelection].getValue(); 
+    UserData user;
+    user.userOutput = "Thank you for your preference!";
+    m_interface->setUserOutput(&user);
+
     logVendingMachine->warn("(PRODUCT) Deploy: " + productDatabase[pData->productSelection].getName() 
                           + " New stock: " + std::to_string(stockTemp-1));
 
-    UserData user;
     user.userOutput = "Deploying: " + productDatabase[pData->productSelection].getName()
                         + " $" + std::to_string(productDatabase[pData->productSelection].getValue());
     m_interface->setUserOutput(&user);
