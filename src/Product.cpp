@@ -56,7 +56,7 @@ void Product::setStock(int t_stock) {
 	m_stock = t_stock;
 }
 
-void Product::getProductDatabase(std::vector<productInfo> &pData) {
+void Product::getProductDatabase(std::vector<productInfo> &pData, Product* t_product) {
 	using namespace std;
 
 	string line;
@@ -93,6 +93,17 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
 			contentEndPos = 0;
 		}
     	products.close();
+	  	
+	  	for (int i = Product::MAX_VM_SLOTS-1; i >= 0; i--) {
+			
+			productInfo pDataTemp = pData.back(); 
+			pData.pop_back();
+
+			t_product[i].setName(pDataTemp.name);
+			t_product[i].setValue(pDataTemp.value);
+			t_product[i].setStock(pDataTemp.stock);
+			t_product[i].setId((ProductID)pDataTemp.id);		
+		}
   	}
   	else {
   		logProduct->error("(Database)Unable to open file");
@@ -100,15 +111,22 @@ void Product::getProductDatabase(std::vector<productInfo> &pData) {
 
 }
 
-void Product::setProductDatabase(Product* t_product, std::vector<productInfo> &pData) {
-	for (int i = Product::MAX_VM_SLOTS-1; i >= 0; i--) {
-		
-		productInfo pDataTemp = pData.back(); 
-		pData.pop_back();
+void Product::setProductDatabase(Product* t_product) {
+	std::ofstream products("src/../include/_ProductDatabase.txt");
+	std::string updatedDatabase = "";
 
-		t_product[i].setName(pDataTemp.name);
-		t_product[i].setValue(pDataTemp.value);
-		t_product[i].setStock(pDataTemp.stock);
-		t_product[i].setId((ProductID)pDataTemp.id);		
+	for (int i = 0; i < Product::MAX_VM_SLOTS; ++i) {
+		updatedDatabase += ";" + t_product[i].getName() + ";" +
+			std::to_string(t_product[i].getValue()) + ";" +
+			std::to_string(t_product[i].getStock()) + ";" +
+			std::to_string(t_product[i].getId()) + ";\n";
 	}
+
+	if (products.is_open()) {
+		products << updatedDatabase;
+    	products.close();
+	}
+	else {
+  		logProduct->error("(Database)Unable to open file");
+  	}
 }

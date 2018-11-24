@@ -28,8 +28,6 @@ namespace VMCore {
 			int m_stock;
 			ProductID m_id;
 			
-			int getId(void);
-			void setId(ProductID t_id);
 		
 		public:
 			Product();
@@ -40,11 +38,13 @@ namespace VMCore {
 			std::string getName();
 			float getValue();
 			int getStock();
+			int getId(void);
 			void setName(std::string t_name);
 			void setValue(float t_value);
 			void setStock(int t_stock);
-			void getProductDatabase(std::vector<productInfo> &pData);
-			void setProductDatabase(Product* t_product, std::vector<productInfo> &pData);
+			void setId(ProductID t_id);
+			void getProductDatabase(std::vector<productInfo> &pData, Product* t_product);
+			void setProductDatabase(Product* t_product);
 	};	
 }
 

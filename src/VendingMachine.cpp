@@ -26,9 +26,7 @@ VendingMachine::VendingMachine(Interface* t_interfaceOverride) : StateMachine(ST
     //Add the product database into the system
     productDatabase = new Product[Product::MAX_VM_SLOTS];
     std::vector<productInfo> pData(Product::MAX_VM_SLOTS);
-    productDatabase->getProductDatabase(pData);    
-    productDatabase->setProductDatabase(productDatabase, pData);
-    //logVendingMachine->debug("Product database ready");    
+    productDatabase->getProductDatabase(pData, productDatabase);        
 } 
 
 VendingMachine::~VendingMachine() {
@@ -227,6 +225,8 @@ void VendingMachine::ST_Deployment(VendingMachineData* pData) {
     SystemData system;
     system.systemOutput = "Product deployed";
     m_interface->setSystemOutput(&system);
+
+    productDatabase->setProductDatabase(productDatabase);
 
     logVendingMachine->warn("(INTERNAL_EVENT)ST_Deployment to ST_Devolution");
     InternalEvent(ST_DEVOLUTION);
